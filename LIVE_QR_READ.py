@@ -44,7 +44,8 @@ def main():
 
         # Decode QR codes in the frame
         frame, data = decode_qr_codes(frame)
-        add_data(data)
+        if add_data(data):
+            break
 
         # Display the resulting frame
         cv2.imshow('QR Code Scanner', frame)
