@@ -71,26 +71,27 @@ def set_visible(file_path):
 def show_qr_sequence(data: bytes):
     chunk_size = QR_SIZE - 2
     chunks = list(split_bytes_into_chunks(data, chunk_size))
-    for i, chunk in enumerate(chunks):
-        split_data = struct.pack('B', i) + struct.pack('B', len(chunk)) + chunk + bytearray(chunk_size - len(chunk))
-        qr = segno.make_qr(split_data)
-        qr.save("qr.png", scale=10)
-        set_hidden("qr.png")
-        cv.namedWindow("BG", cv.WND_PROP_FULLSCREEN)
-        cv.setWindowProperty("BG", cv.WND_PROP_FULLSCREEN, cv.WINDOW_AUTOSIZE)
-        cv.imshow('BG', 255 * np.ones((100, 100, 3), np.uint8))
-        screen_height = get_screen_height()
-        if screen_height is None:
-            cv.imshow('QR', cv.imread('qr.png'))
-        else:
-            square_barcode = resize_to_square(cv.imread('qr.png'), screen_height // 2)
-            cv.imshow('QR', square_barcode)
-        cv.moveWindow('QR', screen_height // 2, screen_height // 4)
-        if i == 0:
-            cv.waitKey(300)
-        cv.waitKey(300)
-        set_visible('qr.png')
-        os.remove('qr.png')
+    for j in range(2):  # Run the QR codes multiple times
+        for i, chunk in enumerate(chunks):
+            split_data = struct.pack('B', i) + struct.pack('B', len(chunk)) + chunk + bytearray(chunk_size - len(chunk))
+            qr = segno.make_qr(split_data)
+            qr.save("qr.png", scale=10)
+            set_hidden("qr.png")
+            cv.namedWindow("BG", cv.WND_PROP_FULLSCREEN)
+            cv.setWindowProperty("BG", cv.WND_PROP_FULLSCREEN, cv.WINDOW_AUTOSIZE)
+            cv.imshow('BG', 255 * np.ones((100, 100, 3), np.uint8))
+            screen_height = get_screen_height()
+            if screen_height is None:
+                cv.imshow('QR', cv.imread('qr.png'))
+            else:
+                square_barcode = resize_to_square(cv.imread('qr.png'), screen_height // 2)
+                cv.imshow('QR', square_barcode)
+            cv.moveWindow('QR', screen_height // 2, screen_height // 4)
+            if i == j == 0:
+                cv.waitKey(500)
+            cv.waitKey(200)
+            set_visible('qr.png')
+            os.remove('qr.png')
 
 
 show_qr_sequence(bytes)
