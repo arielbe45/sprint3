@@ -79,7 +79,9 @@ def show_qr_sequence(data: bytes):
     for j in range(2):  # Run the QR codes multiple times
         for i, chunk in enumerate(chunks):
             size = len(chunk) if i == len(chunks) - 1 else 0
-            split_data = struct.pack('B', i) + struct.pack('B', size) + chunk + bytearray(chunk_size - len(chunk))
+            size_1 = size // 128
+            size_2 = size % 128
+            split_data = struct.pack('B', size_1) + struct.pack('B', size_2) + struct.pack('B', size) + chunk + bytearray(chunk_size - len(chunk))
             print(split_data)
             qr = segno.make_qr(split_data, encoding='none')
             qr.save("qr.png", scale=10)

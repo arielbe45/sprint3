@@ -13,9 +13,11 @@ def add_data(qr_data):
     global collected_data
     if len(qr_data) < 2:
         return False
-    code_index = int(qr_data[0])
-    code_length = int(qr_data[1])
-    size = 8
+    code_index_1 = int(qr_data[0])
+    code_index_2 = int(qr_data[1])
+    code_index = code_index_1*128 + code_index_2
+    code_length = int(qr_data[2])
+    size = 32
     if code_length!=0:
         size = code_length
 
