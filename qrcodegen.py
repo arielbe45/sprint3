@@ -1,4 +1,5 @@
 import struct
+import ctypes
 
 import segno
 import os
@@ -7,7 +8,7 @@ from screeninfo import get_monitors
 import numpy as np
 
 
-QR_SIZE = 128
+QR_SIZE = 64
 
 bytes = (b'Your mom is very nice Your mom is very nice Your mom is very nice Your mom is very nice Your mom is very'
          b' nice Your mom is very nice Your mom is very nice Your mom is very nice Your mom is very nice Your mom is'
@@ -43,6 +44,30 @@ def split_bytes_into_chunks(byte_data, chunk_size):
         yield byte_data[i:i + chunk_size]
 
 
+def set_hidden(file_path):
+    """
+    Make a file hidden
+    :param file_path:
+    :return:
+    """
+    FILE_ATTRIBUTE_HIDDEN = 0x02
+    ret = ctypes.windll.kernel32.SetFileAttributesW(file_path, FILE_ATTRIBUTE_HIDDEN)
+    if not ret:
+        raise ctypes.WinError()
+
+
+def set_visible(file_path):
+    """
+    Make a file visible
+    :param file_path:
+    :return:
+    """
+    FILE_ATTRIBUTE_NORMAL = 0x80
+    ret = ctypes.windll.kernel32.SetFileAttributesW(file_path, FILE_ATTRIBUTE_NORMAL)
+    if not ret:
+        raise ctypes.WinError()
+
+
 def show_qr_sequence(data: bytes):
     chunk_size = QR_SIZE - 2
     chunks = list(split_bytes_into_chunks(data, chunk_size))
@@ -50,19 +75,20 @@ def show_qr_sequence(data: bytes):
         split_data = struct.pack('B', i) + struct.pack('B', len(chunk)) + chunk + bytearray(chunk_size - len(chunk))
         qr = segno.make_qr(split_data)
         qr.save("qr.png", scale=10)
+        set_hidden("qr.png")
         cv.namedWindow("BG", cv.WND_PROP_FULLSCREEN)
         cv.setWindowProperty("BG", cv.WND_PROP_FULLSCREEN, cv.WINDOW_AUTOSIZE)
         cv.imshow('BG', 255 * np.ones((100, 100, 3), np.uint8))
         screen_height = get_screen_height()
-        print(screen_height)
         if screen_height is None:
             cv.imshow('QR', cv.imread('qr.png'))
         else:
             square_barcode = resize_to_square(cv.imread('qr.png'), screen_height // 2)
             cv.imshow('QR', square_barcode)
         cv.moveWindow('QR', screen_height // 2, screen_height // 4)
-        cv.waitKey(2000)
-    os.remove('qr.png')
+        cv.waitKey(500)
+        set_visible('qr.png')
+        os.remove('qr.png')
 
 
 show_qr_sequence(bytes)
