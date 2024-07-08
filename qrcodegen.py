@@ -71,10 +71,16 @@ def set_visible(file_path):
 def show_qr_sequence(data: bytes):
     chunk_size = QR_SIZE - 2
     chunks = list(split_bytes_into_chunks(data, chunk_size))
+    try:
+        set_visible('qr.png')
+        os.remove('qr.png')
+    except:
+        pass
     for j in range(2):  # Run the QR codes multiple times
         for i, chunk in enumerate(chunks):
             split_data = struct.pack('B', i) + struct.pack('B', len(chunk)) + chunk + bytearray(chunk_size - len(chunk))
-            qr = segno.make_qr(split_data)
+            print(split_data)
+            qr = segno.make_qr(split_data, encoding='none')
             qr.save("qr.png", scale=10)
             set_hidden("qr.png")
             cv.namedWindow("BG", cv.WND_PROP_FULLSCREEN)
@@ -89,9 +95,6 @@ def show_qr_sequence(data: bytes):
             cv.moveWindow('QR', screen_height // 2, screen_height // 4)
             if i == j == 0:
                 cv.waitKey(500)
-            cv.waitKey(200)
+            cv.waitKey(300)
             set_visible('qr.png')
             os.remove('qr.png')
-
-
-show_qr_sequence(bytes)
