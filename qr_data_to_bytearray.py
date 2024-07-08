@@ -13,10 +13,13 @@ def add_data(qr_data):
     global collected_data
 
 
-
-    code_index = int(qr_data[0])
-    code_length = int(qr_data[1])
-    data = qr_data[2:code_length+2]
+    if 'raw' not in qr_data:
+        return False
+    
+    data_from_qr = qr_data['raw']
+    code_index = int(data_from_qr[0])
+    code_length = int(data_from_qr[1])
+    data = data_from_qr[2:code_length+2]
     if code_index == last_code_index:
         return False
     elif code_index == last_code_index + 1:
@@ -30,7 +33,6 @@ def add_data(qr_data):
 
     # if code_length != 254:
     #     return True
-
 
 
 def process_data():
