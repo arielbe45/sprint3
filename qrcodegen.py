@@ -8,7 +8,7 @@ from screeninfo import get_monitors
 import numpy as np
 
 
-QR_SIZE = 8
+QR_SIZE = 32
 
 bytes = (b'Your mom is very nice Your mom is very nice Your mom is very nice Your mom is very nice Your mom is very'
          b' nice Your mom is very nice Your mom is very nice Your mom is very nice Your mom is very nice Your mom is'
@@ -77,11 +77,14 @@ def show_qr_sequence(data: bytes):
     except:
         pass
     for j in range(2):  # Run the QR codes multiple times
+        print(len(chunks))
         for i, chunk in enumerate(chunks):
-            size = len(chunk) if i == len(chunks) - 1 else 0
-            size_1 = size // 128
-            size_2 = size % 128
-            split_data = struct.pack('B', size_1) + struct.pack('B', size_2) + struct.pack('B', size) + chunk + bytearray(chunk_size - len(chunk))
+            size = 0
+            if i == len(chunks)-1:
+                size = len(chunk)
+            i_1 = i // 128
+            i_2 = i % 128
+            split_data = struct.pack('B', i_1) + struct.pack('B', i_2) + struct.pack('B', size) + chunk + bytearray(chunk_size - len(chunk))
             print(split_data)
             qr = segno.make_qr(split_data, encoding='none')
             qr.save("qr.png", scale=10)
