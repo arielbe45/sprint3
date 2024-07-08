@@ -2,12 +2,12 @@ import os
 import zipfile
 import io
 
-def main():
-    print("hello")
+# def main():
+#     print("hello")
 
-
-if __name__ == '__main__':
-    main()
+#
+# if __name__ == '__main__':
+#     main()
 
 
 
@@ -31,7 +31,23 @@ def folder_to_bytes(folder_path):
 
 
 # Usage
-folder_path = '/path/to/your/folder'
+folder_path = 'C:\\Users\\TLP-001\\Desktop\\sprint3\\TheFolder'
 folder_bytes = folder_to_bytes(folder_path)
 
-# Now folder_bytes contains the folder as bytes
+
+def bytes_to_folder(byte_data, output_folder):
+    # Create a BytesIO object from the byte data
+    zip_buffer = io.BytesIO(byte_data)
+
+    # Create the output folder if it doesn't exist
+    os.makedirs(output_folder, exist_ok=True)
+
+    # Open the zip file
+    with zipfile.ZipFile(zip_buffer, 'r') as zip_ref:
+        # Extract all contents to the output folder
+        zip_ref.extractall(output_folder)
+
+
+# Usage
+output_folder = 'C:\\Users\\TLP-001\\Desktop\\sprint3'
+bytes_to_folder(folder_bytes, output_folder)
