@@ -8,7 +8,7 @@ from screeninfo import get_monitors
 import numpy as np
 
 
-QR_SIZE = 128
+QR_SIZE = 8
 
 bytes = (b'Your mom is very nice Your mom is very nice Your mom is very nice Your mom is very nice Your mom is very'
          b' nice Your mom is very nice Your mom is very nice Your mom is very nice Your mom is very nice Your mom is'
@@ -78,7 +78,10 @@ def show_qr_sequence(data: bytes):
         pass
     for j in range(2):  # Run the QR codes multiple times
         for i, chunk in enumerate(chunks):
-            split_data = struct.pack('B', i) + struct.pack('B', len(chunk)) + chunk + bytearray(chunk_size - len(chunk))
+            size = len(chunk) if i == len(chunks) - 1 else 0
+            size_1 = size // 128
+            size_2 = size % 128
+            split_data = struct.pack('B', size_1) + struct.pack('B', size_2) + struct.pack('B', size) + chunk + bytearray(chunk_size - len(chunk))
             print(split_data)
             qr = segno.make_qr(split_data, encoding='none')
             qr.save("qr.png", scale=10)
@@ -90,11 +93,11 @@ def show_qr_sequence(data: bytes):
             if screen_height is None:
                 cv.imshow('QR', cv.imread('qr.png'))
             else:
-                square_barcode = resize_to_square(cv.imread('qr.png'), screen_height // 2)
+                square_barcode = resize_to_square(cv.imread('qr.png'), screen_height)
                 cv.imshow('QR', square_barcode)
-            cv.moveWindow('QR', screen_height // 2, screen_height // 4)
+            cv.moveWindow('QR', screen_height // 2, -40)
             if i == j == 0:
                 cv.waitKey(500)
-            cv.waitKey(300)
+            cv.waitKey(800)
             set_visible('qr.png')
             os.remove('qr.png')
