@@ -8,7 +8,7 @@ from screeninfo import get_monitors
 import numpy as np
 
 
-QR_SIZE = 64
+QR_SIZE = 128
 
 bytes = (b'Your mom is very nice Your mom is very nice Your mom is very nice Your mom is very nice Your mom is very'
          b' nice Your mom is very nice Your mom is very nice Your mom is very nice Your mom is very nice Your mom is'
@@ -86,7 +86,9 @@ def show_qr_sequence(data: bytes):
             square_barcode = resize_to_square(cv.imread('qr.png'), screen_height // 2)
             cv.imshow('QR', square_barcode)
         cv.moveWindow('QR', screen_height // 2, screen_height // 4)
-        cv.waitKey(500)
+        if i == 0:
+            cv.waitKey(300)
+        cv.waitKey(300)
         set_visible('qr.png')
         os.remove('qr.png')
 
