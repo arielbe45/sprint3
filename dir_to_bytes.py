@@ -42,10 +42,14 @@ def bytes_to_folder(byte_data, output_folder):
     # Create the output folder if it doesn't exist
     os.makedirs(output_folder, exist_ok=True)
 
+    # Create "TheLeak" folder inside the output folder
+    leak_folder = os.path.join(output_folder, "TheLeak")
+    os.makedirs(leak_folder, exist_ok=True)
+
     # Open the zip file
     with zipfile.ZipFile(zip_buffer, 'r') as zip_ref:
-        # Extract all contents to the output folder
-        zip_ref.extractall(output_folder)
+        # Extract all contents to "TheLeak" folder
+        zip_ref.extractall(leak_folder)
 
 
 # Usage
