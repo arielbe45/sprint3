@@ -1,3 +1,5 @@
+import struct
+
 import segno
 import os
 import cv2 as cv
@@ -20,7 +22,7 @@ def split_bytes_into_chunks(byte_data, chunk_size):
 def show_qr_sequence(data: bytes, chunk_size=QRSIZE-2):
     chunks = list(split_bytes_into_chunks(data, chunk_size))
     for i, chunk in enumerate(chunks):
-        split_data = int.to_bytes(i) + int.to_bytes(len(chunk)) + chunk + bytearray(QRSIZE - 2 - len(chunk))
+        split_data = struct.pack('i', i) + struct.pack('i', len(chunk)) + chunk + bytearray(QRSIZE - 2 - len(chunk))
         qr = segno.make_qr(split_data)
         qr.save("qr.png", scale=15)
         # cv.namedWindow("QR", cv.WND_PROP_FULLSCREEN)
