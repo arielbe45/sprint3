@@ -2,14 +2,6 @@ import os
 import zipfile
 import io
 
-# def main():
-#     print("hello")
-
-#
-# if __name__ == '__main__':
-#     main()
-
-
 
 def folder_to_bytes(folder_path):
     # Create a BytesIO object to store the zip file
