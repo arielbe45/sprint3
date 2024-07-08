@@ -3,7 +3,7 @@ import zipfile
 import io
 
 
-def folder_to_bytes(folder_path):
+def folder_to_bytes(folder_path) -> bytes:
     # Create a BytesIO object to store the zip file
     zip_buffer = io.BytesIO()
 
