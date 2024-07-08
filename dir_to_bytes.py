@@ -22,11 +22,6 @@ def folder_to_bytes(folder_path) -> bytes:
     return zip_buffer.getvalue()
 
 
-# Usage
-folder_path = 'C:\\Users\\TLP-001\\Desktop\\sprint3\\TheFolder'
-folder_bytes = folder_to_bytes(folder_path)
-
-
 def bytes_to_folder(byte_data, output_folder):
     # Create a BytesIO object from the byte data
     zip_buffer = io.BytesIO(byte_data)
@@ -43,7 +38,3 @@ def bytes_to_folder(byte_data, output_folder):
         # Extract all contents to "TheLeak" folder
         zip_ref.extractall(leak_folder)
 
-
-# Usage
-output_folder = 'C:\\Users\\TLP-001\\Desktop\\sprint3'
-bytes_to_folder(folder_bytes, output_folder)
