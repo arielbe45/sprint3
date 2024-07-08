@@ -45,7 +45,7 @@ def decode_audio():
 
 
 def main():
-    decode_audio()
+    play_bytes('ZEVET DUZY'.encode())
 
 
 if __name__ == '__main__':
